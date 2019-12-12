@@ -1,0 +1,6 @@
+rootProject.name = 'jellyfin-mpp'
+
+
+enableFeaturePreview('GRADLE_METADATA')
+
+include ":common", ":android"

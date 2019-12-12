@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name" translatable="false">Jellyfin ng</string>
+    <string name="title_activity_main" translatable="false">Jellyfin</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
+    <string name="hello_dashboard_second">Hello DashboardSecondFragment. Arg: %1$s</string>
+    <string name="hello_notifications_second">Hello NotificationsSecondFragment. Arg: %1$s</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="title_activity_login">Login</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">Welcome!</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="invalid_server">Cannot contact the server, is the url correct?</string>
+    <string name="prompt_server">Server url</string>
+    <string name="username_required">Username is required</string>
+    <string name="password_required">Password is required</string>
+</resources>
