@@ -5,5 +5,6 @@ package org.jellyfin.mpp.app.data.model
  */
 data class LoggedInUser(
     val userId: String,
+    val token: String,
     val displayName: String
 )

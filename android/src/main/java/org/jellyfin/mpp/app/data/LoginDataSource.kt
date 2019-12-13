@@ -5,30 +5,58 @@ import io.ktor.client.features.ResponseException
 import kotlinx.coroutines.io.readUTF8Line
 import org.jellyfin.mpp.app.data.model.LoggedInUser
 import org.jellyfin.mpp.common.JellyfinApi
-import org.slf4j.Logger
-import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
+
+sealed class LoginError {
+    object Credentials : LoginError()
+    class Response(val response: String) : LoginError()
+    class Other(val message: String, val exception: Throwable) : LoginError()
+
+    override fun toString(): String {
+        return when (this) {
+            is Credentials -> "Invalid credentials"
+            is Response -> "Server error:\n$response"
+            is Other -> "Error:\n$message"
+        }
+    }
+}
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
 class LoginDataSource {
-    suspend fun login(username: String, password: String, api: JellyfinApi): Result<LoggedInUser> {
+    suspend fun login(
+        username: String,
+        password: String,
+        api: JellyfinApi
+    ): Result<LoggedInUser, LoginError> {
         return try {
             val resp = api.authenticateUserByName(username, password)
-            Result.Success(LoggedInUser(resp.User.Id, resp.User.Id))
+
+            Result.Success(LoggedInUser(resp.User.Id, resp.User.Id, resp.AccessToken))
         } catch (e: ResponseException) {
-            var cnt = "Got error from server:"
+            val cnt = ArrayList<String>()
             while (e.response.content.availableForRead > 0) {
-                cnt += "\n" + e.response.content.readUTF8Line()
+                val line = e.response.content.readUTF8Line()
+                if (line != null) {
+                    cnt.add(line)
+                }
             }
-            Log.e(TAG, cnt)
-            Result.Error(IOException("Got error from server", e))
+            val response = cnt.joinToString("\n")
+
+            if ("invalid user or password" in response.toLowerCase(Locale.ROOT)) {
+                return Result.Error(LoginError.Credentials)
+            }
+            val log = "Got error from server:\n$response"
+            Log.e(TAG, log)
+            Result.Error(LoginError.Response(response))
         } catch (e: Throwable) {
-            val msg = e.message;
+            val msg = e.message
             if (msg != null) {
                 Log.e(TAG, msg)
             }
-            Result.Error(IOException("Error logging in", e))
+            Result.Error(LoginError.Other("Error logging in", e))
         }
     }
 
@@ -37,6 +65,6 @@ class LoginDataSource {
     }
 
     companion object {
-        private val TAG = "LoginDataSource";
+        private val TAG = "LoginDataSource"
     }
 }

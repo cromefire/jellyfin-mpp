@@ -1,14 +1,17 @@
 package org.jellyfin.mpp.common
 
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.defaultSerializer
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.request.*
-import io.ktor.http.*
-import kotlinx.serialization.KSerializer
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.url
+import io.ktor.http.ContentType
+import io.ktor.http.URLBuilder
+import io.ktor.http.Url
+import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.stringify
 
 class JellyfinApi(
     //val appStorage: Any,
@@ -18,37 +21,31 @@ class JellyfinApi(
 ) {
     private val client = HttpClient {
         install(JsonFeature) {
-            serializer = KotlinxSerializer()
+            serializer = KotlinxSerializer(Json.nonstrict)
         }
     }
 
     private fun path(p: String): Url {
-        return URLBuilder(serverAddress).path("jellyfin", p).build()
+        return URLBuilder(serverAddress).path(Url(serverAddress).encodedPath, p).build()
     }
 
     fun HttpRequestBuilder.auth(withToken: Boolean = true) {
-        val params = HashMap<String, String>()
-        params["Client"] = platform.client
-        params["Device"] = platform.deviceName
-        params["DeviceId"] = platform.deviceId
-        params["Version"] = platform.clientVersion
+        val params = ArrayList<String>()
+        params.add("Client=\"${platform.client}\"")
+        params.add("Device=\"${platform.deviceName}\"")
+        params.add("DeviceId=\"${platform.deviceId}\"")
+        params.add("Version=\"${platform.clientVersion}\"")
         if (withToken) {
-            params["Token"] = "<TODO>"
+            params.add("Token <TODO>")
         }
-        val paramsStr = params.map { e ->
-            "${e.key}=${e.value}"
-        }.joinToString(", ")
-        header("X-Emby-Authorization", "MediaBrowser $paramsStr")
+        header("X-Emby-Authorization", "MediaBrowser ${params.joinToString(", ")}")
     }
 
     suspend fun authenticateUserByName(name: String, password: String): AuthenticateResponse {
-        println(Json.stringify(AuthenticateRequest.serializer(), AuthenticateRequest(name, password)))
-
         return client.post(body = AuthenticateRequest(name, password)) {
             auth(withToken = false)
             contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            url(path("users/authenticatebyname"))
+            url(path("Users/AuthenticateByName"))
         }
     }
 }

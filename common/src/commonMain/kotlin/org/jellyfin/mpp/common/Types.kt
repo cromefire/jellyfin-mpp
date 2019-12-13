@@ -9,4 +9,4 @@ data class User(val Id: String)
 data class AuthenticateResponse(val ServerId: String, val AccessToken: String, val User: User)
 
 @Serializable
-data class AuthenticateRequest(val Pw: String, val Username: String)
+data class AuthenticateRequest(val Username: String, val Pw: String)

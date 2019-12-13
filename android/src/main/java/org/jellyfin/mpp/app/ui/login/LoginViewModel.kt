@@ -1,14 +1,15 @@
 package org.jellyfin.mpp.app.ui.login
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.jellyfin.mpp.app.R
+import org.jellyfin.mpp.app.data.LoginError
 import org.jellyfin.mpp.app.data.LoginRepository
 import org.jellyfin.mpp.app.data.Result
-import kotlinx.coroutines.*
-
-import org.jellyfin.mpp.app.R
 import org.jellyfin.mpp.common.JellyfinApi
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -24,10 +25,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             val result = loginRepository.login(username, password, api)
 
             _loginResult.postValue(
-                if (result is Result.Success) {
-                    LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-                } else {
-                    LoginResult(error = R.string.login_failed)
+                when (result) {
+                    is Result.Success -> LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                    is Result.Error -> {
+                        when (result.error) {
+                            is LoginError.Credentials -> LoginResult(error = R.string.invalid_credentials)
+                            is LoginError.Response -> LoginResult(error = R.string.server_error)
+                            is LoginError.Other -> LoginResult(error = R.string.connection_error)
+                        }
+                    }
                 }
             )
         }

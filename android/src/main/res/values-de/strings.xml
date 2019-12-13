@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="login_failed">Login fehlgeschlagen</string>
-    <string name="invalid_server">Server konnte nicht kontaktiert werden, ist die Url richtig?</string>
-    <string name="action_sign_in_short">Einloggen</string>
+    <string name="invalid_server">Ungültige url</string>
     <string name="welcome">Wilkommen!</string>
     <string name="prompt_password">Passwort</string>
     <string name="prompt_username">Benutzername</string>
@@ -10,4 +8,8 @@
     <string name="prompt_server">Server Url</string>
     <string name="username_required">Benutzername muss ausgefüllt werden</string>
     <string name="password_required">Passwort muss ausgefüllt werden</string>
+    <string name="invalid_credentials">Benutzername oder Password ungültig</string>
+    <string name="server_error">Fehler: Der Server hat einen Fehler zurückgegeben</string>
+    <string name="connection_error">Fehler: Verbindung zum Server fehlgeschlagen</string>
+    <string name="action_sign_in">Einloggen</string>
 </resources>

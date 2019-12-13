@@ -14,12 +14,13 @@
     <string name="title_activity_login">Login</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="welcome">Welcome!</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="invalid_server">Cannot contact the server, is the url correct?</string>
+    <string name="invalid_server">Invalid url</string>
     <string name="prompt_server">Server url</string>
     <string name="username_required">Username is required</string>
     <string name="password_required">Password is required</string>
+    <string name="invalid_credentials">Invalid username or password</string>
+    <string name="server_error">Error: The server returned an error</string>
+    <string name="connection_error">Error: Connection to server failed</string>
 </resources>

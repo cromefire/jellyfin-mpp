@@ -28,7 +28,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout(api)
     }
 
-    suspend fun login(username: String, password: String, api: JellyfinApi): Result<LoggedInUser> {
+    suspend fun login(username: String, password: String, api: JellyfinApi): Result<LoggedInUser, LoginError> {
         // handle login
         val result = dataSource.login(username, password, api)
 
