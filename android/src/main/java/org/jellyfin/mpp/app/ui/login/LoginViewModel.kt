@@ -8,25 +8,29 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jellyfin.mpp.app.R
 import org.jellyfin.mpp.app.data.LoginError
-import org.jellyfin.mpp.app.data.LoginRepository
 import org.jellyfin.mpp.app.data.Result
-import org.jellyfin.mpp.common.JellyfinApi
+import org.jellyfin.mpp.app.data.UserRepository
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel (
+    private val userRepository: UserRepository
+) : ViewModel() {
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String, api: JellyfinApi) {
+    fun login(username: String, password: String, url: String) {
         // launched in a separate asynchronous job
         GlobalScope.launch {
-            val result = loginRepository.login(username, password, api)
+            val result = userRepository.login(username, password, url)
 
             _loginResult.postValue(
                 when (result) {
-                    is Result.Success -> LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                    is Result.Success -> {
+
+                        LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                    }
                     is Result.Error -> {
                         when (result.error) {
                             is LoginError.Credentials -> LoginResult(error = R.string.invalid_credentials)

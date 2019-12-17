@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Jellyfin ng</string>
+    <string name="app_name" translatable="false">Jellyfin</string>
     <string name="title_activity_main" translatable="false">Jellyfin</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -7,10 +7,8 @@
     <string name="hello_dashboard_second">Hello DashboardSecondFragment. Arg: %1$s</string>
     <string name="hello_notifications_second">Hello NotificationsSecondFragment. Arg: %1$s</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-
-    <string name="home_second">Home Second</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_music">Music</string>
     <string name="title_activity_login">Login</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
@@ -23,4 +21,24 @@
     <string name="invalid_credentials">Invalid username or password</string>
     <string name="server_error">Error: The server returned an error</string>
     <string name="connection_error">Error: Connection to server failed</string>
+    <string name="logo">Logo</string>
+    <string name="title_activity_home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="general_header">General</string>
 </resources>

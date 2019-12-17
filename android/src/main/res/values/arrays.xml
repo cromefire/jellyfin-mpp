@@ -1,0 +1,16 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="theme_entries">
+        <item>System default</item>
+        <item>Set by Battery Saver</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>battery</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+</resources>

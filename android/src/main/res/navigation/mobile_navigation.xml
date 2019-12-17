@@ -3,41 +3,20 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mobile_navigation"
-        app:startDestination="@+id/navigation_home">
-
+        app:startDestination="@id/navigation_home">
     <fragment
             android:id="@+id/navigation_home"
             android:name="org.jellyfin.mpp.app.ui.home.HomeFragment"
             android:label="@string/title_home"
-            tools:layout="@layout/fragment_home">
-
-        <action
-                android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-                app:destination="@id/navigation_home_second" />
-    </fragment>
+            tools:layout="@layout/fragment_home" />
     <fragment
-            android:id="@+id/navigation_home_second"
-            android:name="org.jellyfin.mpp.app.ui.home.HomeSecondFragment"
-            android:label="@string/home_second"
-            tools:layout="@layout/fragment_home_second">
-        <action
-                android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-                app:destination="@id/navigation_home" />
-
-        <argument
-                android:name="myArg"
-                app:argType="string" />
-    </fragment>
-
+            android:id="@+id/navigation_movies"
+            android:name="org.jellyfin.mpp.app.ui.movies.MoviesFragment"
+            android:label="@string/title_movies"
+            tools:layout="@layout/movies_fragment" />
     <fragment
-            android:id="@+id/navigation_dashboard"
-            android:name="org.jellyfin.mpp.app.ui.dashboard.DashboardFragment"
-            android:label="@string/title_dashboard"
-            tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
-            android:id="@+id/navigation_notifications"
-            android:name="org.jellyfin.mpp.app.ui.notifications.NotificationsFragment"
-            android:label="@string/title_notifications"
-            tools:layout="@layout/fragment_notifications" />
+            android:id="@+id/navigation_music"
+            android:name="org.jellyfin.mpp.app.ui.music.MusicFragment"
+            android:label="@string/title_music"
+            tools:layout="@layout/music_fragment" />
 </navigation>

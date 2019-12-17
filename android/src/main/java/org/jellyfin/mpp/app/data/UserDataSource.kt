@@ -2,11 +2,12 @@ package org.jellyfin.mpp.app.data
 
 import android.util.Log
 import io.ktor.client.features.ResponseException
-import kotlinx.coroutines.io.readUTF8Line
-import org.jellyfin.mpp.app.data.model.LoggedInUser
-import org.jellyfin.mpp.common.JellyfinApi
+import org.jellyfin.mpp.app.readAll
+import org.jellyfin.mpp.common.JellyfinClient
+import org.jellyfin.mpp.common.Platform
+import org.jellyfin.mpp.common.authenticateUserByName
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 sealed class LoginError {
     object Credentials : LoginError()
@@ -22,28 +23,24 @@ sealed class LoginError {
     }
 }
 
+data class LoginResult(val id: String, val displayName: String, val token: String)
+
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-class LoginDataSource {
+class UserDataSource @Inject constructor() {
     suspend fun login(
+        platform: Platform,
+        url: String,
         username: String,
-        password: String,
-        api: JellyfinApi
-    ): Result<LoggedInUser, LoginError> {
+        password: String
+    ): Result<LoginResult, LoginError> {
         return try {
-            val resp = api.authenticateUserByName(username, password)
+            val resp = authenticateUserByName(platform, url, username, password)
 
-            Result.Success(LoggedInUser(resp.User.Id, resp.User.Id, resp.AccessToken))
+            Result.Success(LoginResult(resp.User.Id, resp.User.Name, resp.AccessToken))
         } catch (e: ResponseException) {
-            val cnt = ArrayList<String>()
-            while (e.response.content.availableForRead > 0) {
-                val line = e.response.content.readUTF8Line()
-                if (line != null) {
-                    cnt.add(line)
-                }
-            }
-            val response = cnt.joinToString("\n")
+            val response = e.response.readAll()
 
             if ("invalid user or password" in response.toLowerCase(Locale.ROOT)) {
                 return Result.Error(LoginError.Credentials)
@@ -60,11 +57,11 @@ class LoginDataSource {
         }
     }
 
-    fun logout(api: JellyfinApi) {
+    fun logout(client: JellyfinClient) {
         // TODO: revoke authentication
     }
 
     companion object {
-        private val TAG = "LoginDataSource"
+        private const val TAG = "LoginDataSource"
     }
 }

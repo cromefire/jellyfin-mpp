@@ -5,4 +5,5 @@ expect class Platform {
     val clientVersion: String
     val deviceName: String
     val deviceId: String
+    val devicePixelRatio: Int
 }

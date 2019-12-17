@@ -2,34 +2,42 @@ package org.jellyfin.mpp.app
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import android.widget.Toast
+import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.jellyfin.mpp.app.data.ApiService
 import org.jellyfin.mpp.app.ui.login.LoginActivity
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
+    @Inject lateinit var apiService: ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
 
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+    override fun onResume() {
+        super.onResume()
 
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        GlobalScope.launch {
+            apiService.update()
 
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+            val intent = if (apiService.loggedIn) {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MainActivity,
+                        if (apiService.isOffline) "Offline" else "Welcome back ${apiService.user.displayName}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                Intent(this@MainActivity, HomeActivity::class.java)
+            } else {
+                Intent(this@MainActivity, LoginActivity::class.java)
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 }

@@ -1,37 +1,39 @@
 package org.jellyfin.mpp.app.ui.login
 
 import android.app.Activity
-import android.content.Context
-import android.os.Build
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import org.jellyfin.mpp.app.BuildConfig
-
+import org.jellyfin.mpp.app.HomeActivity
 import org.jellyfin.mpp.app.R
-import org.jellyfin.mpp.common.JellyfinApi
-import org.jellyfin.mpp.common.Platform
-import java.util.*
+import org.jellyfin.mpp.app.data.UserRepository
+import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var userRepository: UserRepository
 
-    private lateinit var loginViewModel: LoginViewModel
+    lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
 
-        loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
+        loginViewModel = ViewModelProviders.of(
+            this,
+            LoginViewModelFactory(userRepository = userRepository)
+        )
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
@@ -63,6 +65,8 @@ class LoginActivity : AppCompatActivity() {
 
                 setResult(Activity.RESULT_OK)
 
+                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                startActivity(intent)
                 //Complete and destroy login activity once successful
                 finish()
             }
@@ -96,51 +100,17 @@ class LoginActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE -> {
-                        val api = buildApi()
-                        if (api != null) {
-                            loginViewModel.login(
-                                username.text.toString(),
-                                password.text.toString(),
-                                api
-                            )
-                        }
+                        loginViewModel.login(username.text.toString(), password.text.toString(), url.text.toString())
                     }
                 }
                 false
             }
 
             login.setOnClickListener {
-                val api = buildApi()
-                if (api != null) {
-                    loading.visibility = View.VISIBLE
-                    loginViewModel.login(username.text.toString(), password.text.toString(), api)
-                }
+                loading.visibility = View.VISIBLE
+                loginViewModel.login(username.text.toString(), password.text.toString(), url.text.toString())
             }
         }
-    }
-
-    private fun buildApi(): JellyfinApi? {
-        val address = url.text.toString()
-        val sp = getSharedPreferences("jellyfin", Context.MODE_PRIVATE)
-        var uuidString = sp.getString("uuid", null)
-        if (uuidString == null) {
-            uuidString = UUID.randomUUID().toString()
-            sp.edit().putString("uuid", uuidString).apply()
-        }
-
-        if (address != "") {
-            return JellyfinApi(
-                address,
-                Platform(
-                    Build.VERSION.RELEASE,
-                    deviceName(),
-                    uuidString,
-                    BuildConfig.VERSION_NAME
-                ),
-                resources.displayMetrics.densityDpi
-            )
-        }
-        return null
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
@@ -156,22 +126,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        private fun deviceName(): String {
-            val m = Build.MANUFACTURER.toLowerCase(Locale.ROOT)
-            val b = Build.BRAND.toLowerCase(Locale.ROOT)
-            val d = Build.DEVICE.toLowerCase(Locale.ROOT)
-            val p = Build.PRODUCT.toLowerCase(Locale.ROOT)
-            return if (m in d || b in d) {
-                Build.DEVICE
-            } else if (m in p || b in p) {
-                Build.PRODUCT
-            } else {
-                Build.MODEL
-            }
-        }
     }
 }
 

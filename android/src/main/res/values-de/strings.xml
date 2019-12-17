@@ -12,4 +12,5 @@
     <string name="server_error">Fehler: Der Server hat einen Fehler zurückgegeben</string>
     <string name="connection_error">Fehler: Verbindung zum Server fehlgeschlagen</string>
     <string name="action_sign_in">Einloggen</string>
+    <string name="logo">Logo</string>
 </resources>
