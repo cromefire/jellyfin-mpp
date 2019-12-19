@@ -67,9 +67,13 @@ class HomeFragment : DaggerFragment() {
             refreshViews(refresh)
         }
 
-        refreshViews(refresh)
-
         return root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        refreshViews(refresh)
     }
 
     private fun refreshViews(refresh: SwipeRefreshLayout) {

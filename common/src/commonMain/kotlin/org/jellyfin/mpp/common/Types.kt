@@ -109,7 +109,8 @@ data class UserData(
 enum class CollectionType {
     boxsets,
     movies,
-    homevideos
+    homevideos,
+    tvshows
 }
 
 enum class ImageType {
