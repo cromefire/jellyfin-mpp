@@ -12,7 +12,7 @@ import org.jellyfin.mpp.app.R
 import org.jellyfin.mpp.common.ImageType
 import org.jellyfin.mpp.common.JView
 
-class ItemAdapter(private val items: LiveData<List<JView>>) : RecyclerView.Adapter<ItemViewHolder>() {
+class ItemAdapter(private val items: LiveData<List<JView>>, private val address: String) : RecyclerView.Adapter<ItemViewHolder>() {
     private val observer = Observer<List<JView>> {
         // Todo: optimize?
         notifyDataSetChanged()
@@ -44,7 +44,8 @@ class ItemAdapter(private val items: LiveData<List<JView>>) : RecyclerView.Adapt
 
         val primary = view.ImageTags[ImageType.Primary]
         if (primary != null) {
-            holder.image.setImageURI("https://jellyfin.cromefire.myds.me/jellyfin/Items/${view.Id}/Images/Primary?maxHeight=390&maxWidth=260&tag=$primary&quality=90")
+            // Todo: Improve
+            holder.image.setImageURI("$address/Items/${view.Id}/Images/Primary?maxHeight=360&maxWidth=640&tag=$primary&quality=90")
         }
 
         when (view) {

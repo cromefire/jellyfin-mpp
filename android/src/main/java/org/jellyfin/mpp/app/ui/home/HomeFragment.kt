@@ -36,7 +36,7 @@ class HomeFragment : DaggerFragment() {
 
         val media = root.findViewById<RecyclerView>(R.id.media)
         @Suppress("UNCHECKED_CAST")
-        val mediaAdapter = ItemAdapter(homeViewModel.media as LiveData<List<JView>>)
+        val mediaAdapter = ItemAdapter(homeViewModel.media as LiveData<List<JView>>, apiService.client.serverAddress)
         media.apply {
             layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = DefaultItemAnimator()
@@ -44,14 +44,14 @@ class HomeFragment : DaggerFragment() {
             isNestedScrollingEnabled = false
         }
         val movieResume = root.findViewById<RecyclerView>(R.id.movie_resume)
-        val movieResumeAdapter = ItemAdapter(homeViewModel.movieResume)
+        val movieResumeAdapter = ItemAdapter(homeViewModel.movieResume, apiService.client.serverAddress)
         movieResume.apply {
             layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = DefaultItemAnimator()
             adapter = movieResumeAdapter
         }
         val musicResume = root.findViewById<RecyclerView>(R.id.music_resume)
-        val musicResumeAdapter = ItemAdapter(homeViewModel.musicResume)
+        val musicResumeAdapter = ItemAdapter(homeViewModel.musicResume, apiService.client.serverAddress)
         musicResume.apply {
             layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = DefaultItemAnimator()
