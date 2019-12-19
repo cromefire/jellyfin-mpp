@@ -28,7 +28,13 @@ private fun HttpRequestBuilder.addPath(address: String, p: String) {
     this.url(URLBuilder(address).path(Url(address).encodedPath, p).build())
 }
 
-@UseExperimental(UnstableDefault::class)
+val clientJson = Json(
+    JsonConfiguration.Stable.copy(
+        strictMode = false,
+        classDiscriminator = "Type"
+    )
+)
+
 suspend fun authenticateUserByName(
     platform: Platform,
     address: String,
@@ -37,7 +43,7 @@ suspend fun authenticateUserByName(
 ): AuthenticateResponse {
     val client = HttpClient {
         install(JsonFeature) {
-            serializer = KotlinxSerializer(Json.nonstrict)
+            serializer = KotlinxSerializer(clientJson)
         }
     }
     return client.post(body = AuthenticateRequest(name, password)) {
@@ -46,10 +52,6 @@ suspend fun authenticateUserByName(
         addPath(address, "Users/AuthenticateByName")
     }
 }
-
-val defaultJson = Json(JsonConfiguration.Stable.copy(
-    strictMode = false
-))
 
 class JellyfinClient(
     //val appStorage: Any,
@@ -60,9 +62,7 @@ class JellyfinClient(
 ) {
     private val client = HttpClient {
         install(JsonFeature) {
-            serializer = KotlinxSerializer(
-                defaultJson
-            )
+            serializer = KotlinxSerializer(clientJson)
         }
     }
 
@@ -81,11 +81,33 @@ class JellyfinClient(
         }
     }
 
-    suspend fun views(): JList<JView> {
+    suspend fun views(): JList<JView.CollectionFolder> {
         val json = client.get<String> {
             auth()
             path("Users/$userId/Views")
         }
-        return defaultJson.parse(JList.serializer(JView.serializer()), json)
+        return clientJson.parse(JList.serializer(JView.CollectionFolder.serializer()), json)
+    }
+
+    suspend fun resume(
+        mediaTypes: List<MediaType>,
+        limit: Int = 12,
+        recursive: Boolean = true,
+        imageTypeLimit: Int = 1,
+        enableImageTypes: List<ImageType> = listOf(ImageType.Primary),
+        enableTotalRecordCount: Boolean = false
+    ): JList<JView> {
+        val json = client.get<String> {
+            auth()
+            path("Users/$userId/Items/Resume")
+            parameter("Limit", limit)
+            parameter("Recursive", recursive)
+            parameter("Fields", "PrimaryImageAspectRatio,BasicSyncInfo")
+            parameter("ImageTypeLimit", imageTypeLimit)
+            parameter("EnableImageTypes", enableImageTypes.joinToString(","))
+            parameter("EnableTotalRecordCount", enableTotalRecordCount)
+            parameter("MediaTypes", mediaTypes.joinToString(","))
+        }
+        return clientJson.parse(JList.serializer(JView.serializer()), json)
     }
 }
