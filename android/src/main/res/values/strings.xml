@@ -3,9 +3,6 @@
     <string name="title_activity_main" translatable="false">Jellyfin</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
-    <string name="hello_dashboard_second">Hello DashboardSecondFragment. Arg: %1$s</string>
-    <string name="hello_notifications_second">Hello NotificationsSecondFragment. Arg: %1$s</string>
     <string name="title_home">Home</string>
     <string name="title_movies">Movies</string>
     <string name="title_music">Music</string>

@@ -139,3 +139,6 @@ lint/tmp/
 
 ### IDEs
 .idea
+
+### Custom
+release/output.json
