@@ -1,6 +1,7 @@
 package org.jellyfin.mpp.common
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class JList<T>(val Items: List<T>)
@@ -43,7 +44,7 @@ sealed class JView {
         val SpecialFeatureCount: Int,
         val DisplayPreferencesId: String,
         val PrimaryImageAspectRatio: Double? = null,
-        val CollectionType: CollectionType,
+        val CollectionType: CollectionTypes = CollectionTypes.other,
         override val ImageTags: Map<ImageType, String>,
         val BackdropImageTags: List<String>,
         val ScreenshotImageTags: List<String>,
@@ -106,11 +107,12 @@ data class UserData(
     val Key: String
 )
 
-enum class CollectionType {
+enum class CollectionTypes {
     boxsets,
     movies,
     homevideos,
-    tvshows
+    tvshows,
+    other
 }
 
 enum class ImageType {

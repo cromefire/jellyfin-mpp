@@ -21,18 +21,14 @@ buildscript {
     }
 }
 
-def gms = true
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
-if (gms) {
-    apply plugin: 'com.google.gms.google-services'
-    apply plugin: 'io.fabric'
-}
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 repositories {
     google()
@@ -48,7 +44,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
-        versionName 'preview.0'
+        versionName 'preview.1'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -105,9 +101,7 @@ dependencies {
     implementation "com.facebook.fresco:fresco:$fresco_version"
     implementation "com.facebook.fresco:webpsupport:$fresco_version"
     implementation "com.airbnb.android:lottie:$lottie_version"
-    if (gms) {
-        implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    }
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

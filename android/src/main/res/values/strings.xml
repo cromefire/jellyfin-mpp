@@ -38,4 +38,9 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="general_header">General</string>
+
+    <!-- Crashlytics -->
+    <string name="enable_crashlytics">Enable sending of crash reports via crashlytics?</string>
+    <string name="enable">Enable</string>
+    <string name="no">No</string>
 </resources>

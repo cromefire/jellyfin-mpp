@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
+apply plugin: "idea"
 
 repositories {
     mavenCentral()

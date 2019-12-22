@@ -8,5 +8,13 @@
                 android:key="theme"
                 android:title="Theme" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Data">
+
+        <SwitchPreference
+                android:defaultValue="false"
+                android:key="crashlytics"
+                android:summary="Whether reporting via crashlytics is enabled (requires restart)"
+                android:title="Crashlytics" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
