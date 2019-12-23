@@ -112,6 +112,7 @@ enum class CollectionTypes {
     movies,
     homevideos,
     tvshows,
+    music,
     other
 }
 
